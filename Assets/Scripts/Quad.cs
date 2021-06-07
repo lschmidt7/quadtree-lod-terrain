@@ -25,13 +25,13 @@ public class Quad
 		vertices = new Vector3[]{
 			center,								// 0 - CENTER
 			tl,									// 1 - TOP LEFT
-			new Vector3(center.x, 0, tl.y),		// 2 - TOP
-			new Vector3(br.x, 0, tl.y),			// 3 - TOP RIGHT
-			new Vector3(br.x, 0, center.y),		// 4 - RIGHT
+			new Vector3(center.x, 0, tl.z),		// 2 - TOP
+			new Vector3(br.x, 0, tl.z),			// 3 - TOP RIGHT
+			new Vector3(br.x, 0, center.z),		// 4 - RIGHT
 			br,									// 5 - BOTTOM RIGHT
-			new Vector3(center.x, 0, br.y),		// 6 - BOTTOM
-			new Vector3(tl.x, 0, br.y),			// 7 - BOTTOM LEFT
-			new Vector3(tl.x, 0, center.y)		// 8 - LEFT
+			new Vector3(center.x, 0, br.z),		// 6 - BOTTOM
+			new Vector3(tl.x, 0, br.z),			// 7 - BOTTOM LEFT
+			new Vector3(tl.x, 0, center.z)		// 8 - LEFT
 		};
 
 		neighbors = new Quad[] {
@@ -189,6 +189,31 @@ public class Quad
 		for (int i = 0; i < quadrants.Length; i++) {
 			quadrants[i].setNeighbors();
 		}
+	}
+
+	public List<Vector3[]> getTriangle()
+	{
+		List<Vector3[]> triangles = new List<Vector3[]>();
+		List<Vector3> points = new List<Vector3>();
+		for (int i = 0; i < vertices.Length; i++)
+		{
+			if(enabled[i])
+				points.Add(vertices[i]);
+		}
+		for (int i = 1; i < points.Count; i++)
+		{
+			int prox = i + 1;
+			if (prox >= points.Count)
+			{
+				prox = 1;
+			}
+			Vector3[] triangle = new Vector3[3];
+			triangle[2] = points[0];
+			triangle[1] = points[i];
+			triangle[0] = points[prox];
+			triangles.Add(triangle);
+		}
+		return triangles;
 	}
 
 }
