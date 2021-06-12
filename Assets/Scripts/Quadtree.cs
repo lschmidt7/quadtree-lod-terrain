@@ -8,23 +8,22 @@ public class Quadtree
 
 	public List<Vector3> triangles;
 
-	public Quadtree()
+	Texture2D texture;
+
+	public Quadtree(Texture2D texture)
 	{
+		this.texture = texture;
 		triangles = new List<Vector3>();
-		root = new Quad(new Vector3(0, 0, 0), new Vector3(1000, 0, 1000), 1000, "tr", null);
+		root = new Quad(new Vector3(0, 0, 0), new Vector3(600, 0, -600), 600, "tr", null);
 	}
 
 	public void search(Quad quad, Vector3 p)
 	{
-		if (quad.size <= 20 || !quad.contain(p))
-		{
-			return;
-		}
-		else
+		if( ( quad.contain(p) || quad.inRange(p)) && quad.size > 2)
 		{
 			for (int i = 0; i < quad.neighbors.Length; i++)
 			{
-				if (quad.neighbors[i] != null)
+				if (quad.neighbors[i] != null && quad.neighbors[i].leaf)
 				{
 					quad.neighbors[i].subdivide();
 				}
@@ -32,10 +31,10 @@ public class Quadtree
 
 			quad.subdivide();
 
-			this.search(quad.quadrants[0], p);
-			this.search(quad.quadrants[1], p);
-			this.search(quad.quadrants[2], p);
-			this.search(quad.quadrants[3], p);
+			search(quad.quadrants[0], p);
+			search(quad.quadrants[1], p);
+			search(quad.quadrants[2], p);
+			search(quad.quadrants[3], p);
 		}
 	}
 
@@ -48,10 +47,10 @@ public class Quadtree
 		}
 		else
 		{
-			this.detail(quad.quadrants[0]);
-			this.detail(quad.quadrants[1]);
-			this.detail(quad.quadrants[2]);
-			this.detail(quad.quadrants[3]);
+			detail(quad.quadrants[0]);
+			detail(quad.quadrants[1]);
+			detail(quad.quadrants[2]);
+			detail(quad.quadrants[3]);
 		}
 	}
 
@@ -59,13 +58,13 @@ public class Quadtree
 	{
 		if (quad.leaf)
 		{
-			List<Vector3[]> quadTriangles = quad.getTriangle();
-			foreach (Vector3[] tri in quadTriangles)
+			List<Vector3> quadTriangles = quad.getTriangle();
+			foreach (Vector3 v in quadTriangles)
 			{
-				foreach (Vector3 v in tri)
-				{
-					triangles.Add(v);
-				}
+				float h = texture.GetPixel((int)v.x,(int)v.z).r * 100;
+				Vector3 nv = v;
+				nv.y = h;
+				triangles.Add(nv);
 			}
 		}
 		else

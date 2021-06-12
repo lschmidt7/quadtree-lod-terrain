@@ -7,11 +7,14 @@
 [Ll]ocal[Cc]ache/
 [Oo]bj/
 [Tt]emp/
+[Ll]ogs/
 [Uu]nityGenerated/
 # file on crash reports
 sysinfo.txt
 # Unity3D generated meta files
 *.pidb.meta
+*.meta
+*.log
 
 ###
 # VS/MD solution and project files

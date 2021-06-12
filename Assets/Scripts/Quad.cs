@@ -12,7 +12,7 @@ public class Quad
 
 	public bool leaf;
 
-	Vector3[] vertices;
+	public Vector3[] vertices;
 
 	public Quad[] quadrants;						// CHILDS    0 - TL, 1 - TR, 2 - BL, 3 - BR
 
@@ -143,8 +143,14 @@ public class Quad
 
 	public bool contain(Vector3 p) 
 	{
-		if (p.x >= vertices[1].x && p.x <= vertices[5].x) {
-			if (p.z >= vertices[1].z && p.z <= vertices[5].z) {
+		if ( 
+			(p.x >= vertices[1].x && p.x <= vertices[5].x) ||
+			(p.x <= vertices[1].x && p.x >= vertices[5].x) 
+		){
+			if (
+				(p.z <= vertices[1].z && p.z >= vertices[5].z) ||
+				(p.z >= vertices[1].z && p.z <= vertices[5].z)
+			) {
 				return true;
 			}
 		}
@@ -153,7 +159,9 @@ public class Quad
 
 	public bool inRange(Vector3 p) 
 	{
-		if (Vector3.Distance(p,vertices[0]) < 200) {
+		Vector2 pv2 = new Vector2(p.x,p.z);
+		Vector2 vv2 = new Vector2(vertices[0].x,vertices[0].z);
+		if (Vector2.Distance(pv2,vv2) < 52) {
 			return true;
 		}
 		return false;
@@ -180,7 +188,7 @@ public class Quad
 		leaf = false;
 		
 		setNeighbors();
-		
+
 		quadrants[0] = new Quad(vertices[1], vertices[0], size/2, "tl", this);
 		quadrants[1] = new Quad(vertices[2], vertices[4], size/2, "tr", this);
 		quadrants[2] = new Quad(vertices[8], vertices[6], size/2, "bl", this);
@@ -191,9 +199,9 @@ public class Quad
 		}
 	}
 
-	public List<Vector3[]> getTriangle()
+	public List<Vector3> getTriangle()
 	{
-		List<Vector3[]> triangles = new List<Vector3[]>();
+		List<Vector3> triangles = new List<Vector3>();
 		List<Vector3> points = new List<Vector3>();
 		for (int i = 0; i < vertices.Length; i++)
 		{
@@ -207,11 +215,9 @@ public class Quad
 			{
 				prox = 1;
 			}
-			Vector3[] triangle = new Vector3[3];
-			triangle[2] = points[0];
-			triangle[1] = points[i];
-			triangle[0] = points[prox];
-			triangles.Add(triangle);
+			triangles.Add(points[0]);
+			triangles.Add(points[i]);
+			triangles.Add(points[prox]);
 		}
 		return triangles;
 	}

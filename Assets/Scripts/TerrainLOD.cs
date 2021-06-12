@@ -10,16 +10,17 @@ public class TerrainLOD : MonoBehaviour
 
 	public bool wireframe;
 	public Material material;
+	public Texture2D heigthMap;
+
+	Vector3 p;
 
 	void Start()
 	{
-		quadtree = new Quadtree();
-		Vector3 p = new Vector3(500, 0, 500);
+		quadtree = new Quadtree(heigthMap);
+		p = new Vector3(310, 0, -310);
 		quadtree.search(quadtree.root, p);
 		quadtree.detail(quadtree.root);
 		quadtree.setTriangles(quadtree.root);
-
-		Debug.Log(quadtree.triangles[0]);
 
 		Create();
 	}
@@ -27,10 +28,10 @@ public class TerrainLOD : MonoBehaviour
 	public void Create()
 	{
 		int lenght = quadtree.triangles.Count;
-		Debug.Log(lenght);
+		
 		buffer = new ComputeBuffer ( lenght, 12 );
 
-        buffer.SetData(quadtree.triangles.ToArray());
+        buffer.SetData( quadtree.triangles.ToArray() );
 
         material.SetBuffer("buffer",buffer);
 	}
@@ -54,4 +55,5 @@ public class TerrainLOD : MonoBehaviour
 		Debug.Log("Liberando buffer");
 		buffer.Release();
 	}
+
 }
