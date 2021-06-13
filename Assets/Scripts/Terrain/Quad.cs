@@ -185,17 +185,19 @@ public class Quad
 
 	public void subdivide()
 	{
-		leaf = false;
+		if(leaf){
+			leaf = false;
 		
-		setNeighbors();
+			setNeighbors();
 
-		quadrants[0] = new Quad(vertices[1], vertices[0], size/2, "tl", this);
-		quadrants[1] = new Quad(vertices[2], vertices[4], size/2, "tr", this);
-		quadrants[2] = new Quad(vertices[8], vertices[6], size/2, "bl", this);
-		quadrants[3] = new Quad(vertices[0], vertices[5], size/2, "br", this);
+			quadrants[0] = new Quad(vertices[1], vertices[0], size/2, "tl", this);
+			quadrants[1] = new Quad(vertices[2], vertices[4], size/2, "tr", this);
+			quadrants[2] = new Quad(vertices[8], vertices[6], size/2, "bl", this);
+			quadrants[3] = new Quad(vertices[0], vertices[5], size/2, "br", this);
 
-		for (int i = 0; i < quadrants.Length; i++) {
-			quadrants[i].setNeighbors();
+			for (int i = 0; i < quadrants.Length; i++) {
+				quadrants[i].setNeighbors();
+			}
 		}
 	}
 

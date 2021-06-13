@@ -7,6 +7,7 @@ Shader "Unlit/terrain_shader"
         _Noise("Noise",2D) = "white" {}
         _Tilling("Tilling",Range(0,5)) = 1
         _Height ("Height",Range(1,50)) = 1
+        _Offset ("Offset",Range(0,1)) = 0.01
     }
     SubShader
     {
@@ -21,6 +22,7 @@ Shader "Unlit/terrain_shader"
             #pragma target 5.0
 
             #include "UnityCG.cginc"
+            #include "Normals.cginc"
 
             struct vertIN{
 				uint vID : SV_VertexID;
@@ -32,6 +34,7 @@ Shader "Unlit/terrain_shader"
                 float3 worldPos : TEXCOORD1;
                 float4 vertex : POSITION;
                 float2 uv: TEXCOORD0;
+                float3 normal : NORMAL;
             };
 
             float4 _Color;
@@ -39,6 +42,7 @@ Shader "Unlit/terrain_shader"
             float _Height;
             sampler2D _Texture;
             sampler2D _Noise;
+            float _Offset;
 
             StructuredBuffer<float3> buffer;
 
@@ -46,21 +50,21 @@ Shader "Unlit/terrain_shader"
             {
                 v2f o;
 				float4 position = float4(buffer[i.vID],0);
-                // position.y = tex2Dlod(_Noise, float4(position.x,position.z,0,0)).r * _Height;
+                position.y = tex2Dlod(_Noise, float4(position.x,position.z,0,0) * _Tilling).r * _Height;
+                o.normal = sampleNormal(position,_Noise,_Offset,_Height);
 				o.vertex = UnityObjectToClipPos(position);
                 o.worldPos = mul(unity_ObjectToWorld,position);
                 o.uv = float2(position.x,position.z);
+                
                 return o;
 
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
+                float light = dot(_WorldSpaceLightPos0,-i.normal);
                 
-                
-                float4 col = tex2D(_Texture, i.uv * _Tilling);
-                
-                // MOUSE
+                float4 col = tex2D(_Texture, i.uv) * light;
 
                 return col;
             }

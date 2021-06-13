@@ -8,26 +8,24 @@ public class Quadtree
 
 	public List<Vector3> triangles;
 
-	public Color[] colors;
 	public int widthTex;
 	public int heightTex;
 
-	public Quadtree(Color[] colors)
+	public Quadtree()
 	{
-		this.colors = colors;
 		widthTex = 2048;
 		heightTex = 2048;
 		triangles = new List<Vector3>();
-		root = new Quad(new Vector3(0, 0, 0), new Vector3(Settings.width, 0, Settings.height), Settings.width, "tr", null);
+		root = new Quad(new Vector3(0, 0, 0), new Vector3(Settings.size, 0, Settings.size), Settings.size, "tr", null);
 	}
 
 	public void search(Quad quad, Vector3 p)
 	{
-		if( ( quad.contain(p) || quad.inRange(p)) && quad.size > 2)
+		if( ( quad.contain(p) || quad.inRange(p)) && quad.size > 1)
 		{
 			for (int i = 0; i < quad.neighbors.Length; i++)
 			{
-				if (quad.neighbors[i] != null && quad.neighbors[i].leaf)
+				if (quad.neighbors[i] != null)
 				{
 					quad.neighbors[i].subdivide();
 				}
@@ -72,7 +70,7 @@ public class Quadtree
 				if(v.z > heightTex){
 					z = ((int)v.z % heightTex);
 				}
-				float h = colors[x * widthTex + z].r * 50f;
+				float h = 0;
 				Vector3 nv = v;
 				nv.y = h;
 				triangles.Add(nv);

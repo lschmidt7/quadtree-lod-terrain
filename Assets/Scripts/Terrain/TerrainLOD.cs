@@ -6,36 +6,23 @@ using System.Threading;
 public class TerrainLOD : MonoBehaviour
 {
 
-	[Header("Setup")]
+	[Header("View")]
 	public bool wireframe;
+
+	[Header("Setup")]
 	public Material material;
-	public Texture2D heigthMap;
-
-	[Header("Settings")]
-	public float dist;
-	public float distToRec;
-
-	
 	public Transform player;
 
 
 	Quadtree quadtree;
-
 	ComputeBuffer buffer;
 	Vector3 lastPosition;
 
-	public int lenght;
-
-	public bool ready = false;
-
-	Color[] colors;
+	bool ready = false;
 	
 
 	void Start()
 	{
-		colors = heigthMap.GetPixels();
-		Settings.dist = dist;
-		Settings.distToRec = distToRec;
 
 		lastPosition = player.position;
 		
@@ -45,13 +32,11 @@ public class TerrainLOD : MonoBehaviour
 
 	public void UpdateTerrainQuadTree()
 	{
-		quadtree = new Quadtree(colors);
+		quadtree = new Quadtree();
 		quadtree.search(quadtree.root, lastPosition);
 		quadtree.detail(quadtree.root);
 
 		quadtree.setTriangles(quadtree.root);
-
-		lenght = quadtree.triangles.Count;
 		
 		ready = true;
 	}
@@ -64,7 +49,7 @@ public class TerrainLOD : MonoBehaviour
 		if(buffer!=null)
 			buffer.Dispose();
 
-		buffer = new ComputeBuffer ( lenght, 12 );
+		buffer = new ComputeBuffer ( quadtree.triangles.Count, 12 );
 
         buffer.SetData( quadtree.triangles.ToArray() );
 
@@ -74,7 +59,7 @@ public class TerrainLOD : MonoBehaviour
 	void OnRenderObject(){
         material.SetPass (0);
         if(wireframe){
-            Graphics.DrawProceduralNow (MeshTopology.LineStrip, buffer.count, 1);
+            Graphics.DrawProceduralNow (MeshTopology.Lines, buffer.count, 1);
         }else{
             Graphics.DrawProceduralNow (MeshTopology.Triangles, buffer.count, 1);
         }
