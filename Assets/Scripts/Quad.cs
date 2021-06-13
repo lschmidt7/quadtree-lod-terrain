@@ -161,7 +161,7 @@ public class Quad
 	{
 		Vector2 pv2 = new Vector2(p.x,p.z);
 		Vector2 vv2 = new Vector2(vertices[0].x,vertices[0].z);
-		if (Vector2.Distance(pv2,vv2) < 52) {
+		if (Vector2.Distance(pv2,vv2) < Settings.dist) {
 			return true;
 		}
 		return false;
@@ -215,9 +215,9 @@ public class Quad
 			{
 				prox = 1;
 			}
-			triangles.Add(points[0]);
-			triangles.Add(points[i]);
 			triangles.Add(points[prox]);
+			triangles.Add(points[i]);
+			triangles.Add(points[0]);
 		}
 		return triangles;
 	}

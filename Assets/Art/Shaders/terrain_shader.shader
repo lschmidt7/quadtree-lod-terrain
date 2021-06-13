@@ -4,7 +4,9 @@ Shader "Unlit/terrain_shader"
     {
         _Color ("Color",Color) = (1,1,1,1)
         _Texture("Texture",2D) = "white" {}
+        _Noise("Noise",2D) = "white" {}
         _Tilling("Tilling",Range(0,5)) = 1
+        _Height ("Height",Range(1,50)) = 1
     }
     SubShader
     {
@@ -34,7 +36,9 @@ Shader "Unlit/terrain_shader"
 
             float4 _Color;
             float _Tilling;
+            float _Height;
             sampler2D _Texture;
+            sampler2D _Noise;
 
             StructuredBuffer<float3> buffer;
 
@@ -42,6 +46,7 @@ Shader "Unlit/terrain_shader"
             {
                 v2f o;
 				float4 position = float4(buffer[i.vID],0);
+                // position.y = tex2Dlod(_Noise, float4(position.x,position.z,0,0)).r * _Height;
 				o.vertex = UnityObjectToClipPos(position);
                 o.worldPos = mul(unity_ObjectToWorld,position);
                 o.uv = float2(position.x,position.z);
@@ -53,7 +58,7 @@ Shader "Unlit/terrain_shader"
             {
                 
                 
-                float4 col = tex2D(_Texture, i.uv/_Tilling);
+                float4 col = tex2D(_Texture, i.uv * _Tilling);
                 
                 // MOUSE
 

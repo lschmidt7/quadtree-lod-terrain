@@ -8,13 +8,17 @@ public class Quadtree
 
 	public List<Vector3> triangles;
 
-	Texture2D texture;
+	public Color[] colors;
+	public int widthTex;
+	public int heightTex;
 
-	public Quadtree(Texture2D texture)
+	public Quadtree(Color[] colors)
 	{
-		this.texture = texture;
+		this.colors = colors;
+		widthTex = 2048;
+		heightTex = 2048;
 		triangles = new List<Vector3>();
-		root = new Quad(new Vector3(0, 0, 0), new Vector3(600, 0, -600), 600, "tr", null);
+		root = new Quad(new Vector3(0, 0, 0), new Vector3(Settings.width, 0, Settings.height), Settings.width, "tr", null);
 	}
 
 	public void search(Quad quad, Vector3 p)
@@ -61,7 +65,14 @@ public class Quadtree
 			List<Vector3> quadTriangles = quad.getTriangle();
 			foreach (Vector3 v in quadTriangles)
 			{
-				float h = texture.GetPixel((int)v.x,(int)v.z).r * 100;
+				int x = (int)v.x, z = (int)v.z;
+				if(v.x > widthTex){
+					x = ((int)v.x % widthTex);
+				}
+				if(v.z > heightTex){
+					z = ((int)v.z % heightTex);
+				}
+				float h = colors[x * widthTex + z].r * 50f;
 				Vector3 nv = v;
 				nv.y = h;
 				triangles.Add(nv);
