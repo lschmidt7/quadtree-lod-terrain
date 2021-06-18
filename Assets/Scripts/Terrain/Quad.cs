@@ -167,6 +167,21 @@ public class Quad
 		return false;
 	}
 
+	public bool inBounds(Vector3 p, float area)
+	{
+		Vector2 tl = new Vector2(p.x - area, p.z + area);
+		Vector2 br = new Vector2(p.x +  area, p.z - area);
+		Vector2 v = new Vector2(vertices[0].x,vertices[0].z);
+		if(v.x >= tl.x && v.x <= br.x)
+		{
+			if(v.y <= tl.y && v.y >= br.y)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void toSew(){
 		
 		if(neighbors[1] != null && !neighbors[1].leaf){

@@ -2,12 +2,13 @@ Shader "Unlit/terrain_shader"
 {
    Properties
     {
-        _Color ("Color",Color) = (1,1,1,1)
-        _Texture("Texture",2D) = "white" {}
-        _Noise("Noise",2D) = "white" {}
-        _Tilling("Tilling",Range(0,5)) = 1
-        _Height ("Height",Range(1,50)) = 1
-        _Offset ("Offset",Range(0,1)) = 0.01
+        _Texture ("Texture",2D) = "white" {}
+        _Snow ("Snow Tex",2D) = "white" {}
+        _Mountain ("Mountain Tex",2D) = "white" {}
+        _Tilling ("Tilling",Range(0,1)) = 1
+        _Frequency ("Frequency",Range(0,40)) = 1
+        _Height ("Height",Range(1,200)) = 1
+        _Valleys ("Valleys",Range(0,40)) = 1
     }
     SubShader
     {
@@ -22,6 +23,7 @@ Shader "Unlit/terrain_shader"
             #pragma target 5.0
 
             #include "UnityCG.cginc"
+            #include "Noise.cginc"
             #include "Normals.cginc"
 
             struct vertIN{
@@ -37,12 +39,15 @@ Shader "Unlit/terrain_shader"
                 float3 normal : NORMAL;
             };
 
-            float4 _Color;
             float _Tilling;
+            float _Frequency;
             float _Height;
             sampler2D _Texture;
-            sampler2D _Noise;
-            float _Offset;
+            sampler2D _Snow;
+            sampler2D _Mountain;
+            float _Valleys;
+
+            #include "Biomes.cginc"
 
             StructuredBuffer<float3> buffer;
 
@@ -50,8 +55,10 @@ Shader "Unlit/terrain_shader"
             {
                 v2f o;
 				float4 position = float4(buffer[i.vID],0);
-                position.y = tex2Dlod(_Noise, float4(position.x,position.z,0,0) * _Tilling).r * _Height;
-                o.normal = sampleNormal(position,_Noise,_Offset,_Height);
+                float3 pos = position.xyz / _Frequency;
+                position.y = noise(pos,_Height,_Valleys);
+
+                o.normal = sampleNormal(position.xyz,_Height,_Valleys,_Frequency);
 				o.vertex = UnityObjectToClipPos(position);
                 o.worldPos = mul(unity_ObjectToWorld,position);
                 o.uv = float2(position.x,position.z);
@@ -64,7 +71,7 @@ Shader "Unlit/terrain_shader"
             {
                 float light = dot(_WorldSpaceLightPos0,-i.normal);
                 
-                float4 col = tex2D(_Texture, i.uv) * light;
+                float4 col = getBiome(i.worldPos.y/_Height,i.uv) * light;
 
                 return col;
             }

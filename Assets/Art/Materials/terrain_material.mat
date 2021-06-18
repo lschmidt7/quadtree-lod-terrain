@@ -47,8 +47,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Mountain:
+        m_Texture: {fileID: 2800000, guid: 0c9a163b4fd04cb4e8252c9c73a6bc12, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Noise:
-        m_Texture: {fileID: 2800000, guid: 8f3a75d9e171e5944af32c681be6ec7a, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8376a1327b67e6f4992e4b8a7debc0b7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -59,8 +63,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Snow:
+        m_Texture: {fileID: 2800000, guid: d2c7622629631644e821620b41391f67, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Texture:
-        m_Texture: {fileID: 2800000, guid: 8376a1327b67e6f4992e4b8a7debc0b7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 66aab66e3e0e9884fbcc3e3ea66deeca, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -68,20 +76,22 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Frequency: 40
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Height: 3.8
+    - _Height: 29
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Offset: 0.995
+    - _Offset: 0.9999
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Tilling: 0.02
+    - _Tilling: 0.47
     - _UVSec: 0
+    - _Valleys: 4.6
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.5849056, g: 0.41157222, b: 0.23451404, a: 1}

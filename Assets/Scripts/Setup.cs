@@ -6,12 +6,12 @@ public class Setup : MonoBehaviour
 {
 
     private void Awake() {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        // QualitySettings.vSyncCount = 0;
+        // Application.targetFrameRate = 60;
 
-        QualitySettings.asyncUploadTimeSlice = 4;
-        QualitySettings.asyncUploadBufferSize = 16;
-        QualitySettings.asyncUploadPersistentBuffer = true;
+        // QualitySettings.asyncUploadTimeSlice = 4;
+        // QualitySettings.asyncUploadBufferSize = 16;
+        // QualitySettings.asyncUploadPersistentBuffer = true;
     }
 
 }

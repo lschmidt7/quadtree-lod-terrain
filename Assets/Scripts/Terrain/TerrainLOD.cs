@@ -23,7 +23,7 @@ public class TerrainLOD : MonoBehaviour
 
 	void Start()
 	{
-
+		
 		lastPosition = player.position;
 		
 		UpdateTerrainQuadTree();
@@ -33,7 +33,7 @@ public class TerrainLOD : MonoBehaviour
 	public void UpdateTerrainQuadTree()
 	{
 		quadtree = new Quadtree();
-		quadtree.search(quadtree.root, lastPosition);
+		quadtree.search(quadtree.root, lastPosition, 0);
 		quadtree.detail(quadtree.root);
 
 		quadtree.setTriangles(quadtree.root);
@@ -43,7 +43,6 @@ public class TerrainLOD : MonoBehaviour
 
 	public void UpdateTerrainBuffer()
 	{
-
 		ready = false;
 
 		if(buffer!=null)
@@ -70,6 +69,7 @@ public class TerrainLOD : MonoBehaviour
 	{
 		if(Vector3.Distance(player.position,lastPosition) > Settings.distToRec)
 		{
+			Debug.Log("Atualizando");
 			lastPosition = player.position;
 			new Thread(UpdateTerrainQuadTree).Start();
 		}
